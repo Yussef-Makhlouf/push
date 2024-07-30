@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Note App</title>
+</head>
+<body>
+  <h1>Notes</h1>
+  <div id="notes"></div>
+  <form id="noteForm">
+    <input type="text" id="title" placeholder="Title" required>
+    <textarea id="content" placeholder="Content" required></textarea>
+    <button type="submit">Add Note</button>
+  </form>
+  <script>
+    async function fetchNotes() {
+      const response = await fetch('http://localhost:5000/api/notes');
+      const notes = await response.json();
+      const notesDiv = document.getElementById('notes');
+      notesDiv.innerHTML = '';
+      notes.forEach(note => {
+        const noteElement = document.createElement('div');
+        noteElement.innerHTML = `<h2>${note.title}</h2><p>${note.content}</p>`;
+        notesDiv.appendChild(noteElement);
+      });
+    }
+
+    document.getElementById('noteForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+
+      await fetch('http://localhost:5000/api/notes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title, content })
+      });
+
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
+      fetchNotes();
+    });
+
+    fetchNotes();
+  </script>
+</body>
+</html>
