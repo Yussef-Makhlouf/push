@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.post('/', createNote);
+router.post('/api/addNotes', createNote);
 router.get('/', getNotes);
 router.get('/:id', getNoteById);
 router.put('/:id', updateNote);
